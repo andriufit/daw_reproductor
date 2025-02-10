@@ -5,20 +5,16 @@ export default {
 
     async get(url) {
         url = url + "&token=" + this.TOKEN;
-
-        return await fetch(url);
+        return await fetch(url).then(res => res.json());
     },
 
-    async getSounds(searchQuery = ""){
-        let response = (await this.get(this.BASE_URL + "/search/text/?query=" + searchQuery)).json();   
-        
-        return response;
+    async getSounds(searchQuery = "", page = 1, pageSize = 10) {
+        let url = `${this.BASE_URL}/search/text/?query=${searchQuery}&page=${page}&page_size=${pageSize}`;
+        return await this.get(url);
     },
 
-    async getsoundData(id){
-        let response = (await this.get(this.BASE_URL + "/sounds/" + id +"/?")).json();   
-        
-        return response;
+    async getSoundData(id) {
+        return await this.get(`${this.BASE_URL}/sounds/${id}/?`);
     }
 
 }

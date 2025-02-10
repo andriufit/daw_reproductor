@@ -8,6 +8,26 @@ $textColor: #dbdbdb;
     padding: 45px;
     overflow-y: scroll;
 
+    .wrapper_carga_total {
+        width: 200px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+    .wrapper_cargar_mas {
+        
+        width: 200px;
+        height: 60px;
+        position: relative;
+        z-index: 1;
+        margin: auto 30%;
+      }
+
     .loading-gif-container{
         position: relative;
         width: 100%;
