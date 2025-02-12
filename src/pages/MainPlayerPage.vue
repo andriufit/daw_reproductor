@@ -35,6 +35,7 @@
         <div class="loading-gif-container" v-show="!searchDataStore.loadSearch">
             <loadingComponent></loadingComponent>
         </div>
+        Asensio
     </div>
 </template>
 
