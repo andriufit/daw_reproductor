@@ -1,7 +1,9 @@
 export default {
 
     BASE_URL: "https://freesound.org/apiv2",
-    TOKEN: "N4XAd06Sn5p3sOJmhFUtB9JOACb4BxctCWUn839Z",
+
+    TOKEN: "mdEsHhr7QN2ZtS527Qe2N1aGr20mD3sWm7giPI45",
+
 
     async get(url) {
         url = url + "&token=" + this.TOKEN;
