@@ -24,7 +24,6 @@
         <div class="loading-gif-container" v-show="!searchDataStore.loadSearch">
             <loadingComponent></loadingComponent>
         </div>
-        Asensio
     </div>
 </template>
 
@@ -102,10 +101,19 @@ const handleScroll = (event) => {
 };
 
 const changeCurrentSong = (key) => {
-    soundDataStore.soundName = soundsData.value[key].name;
-    soundDataStore.soundImg = soundsData.value[key].images?.spectral_m || '';
-    soundDataStore.soundUrl = soundsData.value[key].previews?.["preview-hq-mp3"] || '';
+    const selectedSong = {
+        soundName: soundsData.value[key].name,
+        soundImg: soundsData.value[key].images?.spectral_m || '',
+        soundUrl: soundsData.value[key].previews?.["preview-hq-mp3"] || ''
+    };
+
+    soundDataStore.soundName = selectedSong.soundName;
+    soundDataStore.soundImg = selectedSong.soundImg;
+    soundDataStore.soundUrl = selectedSong.soundUrl;
+
+    soundDataStore.addToHistory(selectedSong); // Agregamos la canción al historial
 };
+
 </script>
 
 <style scoped>

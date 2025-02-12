@@ -1,18 +1,24 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
 
 export const useSoundDataStore = defineStore('soundDataStore', () => {
-    
-    const soundName = ref('')
-    //https://cdn.freesound.org/previews/6/6465_2518-hq.mp3
-    const soundUrl = ref('')
+    const soundName = ref('');
+    const soundUrl = ref('');
     const soundImg = ref('');
+    const history = ref([]);  // Historial de las últimas canciones reproducidas
 
     const resetSound = () => {
         soundName.value = '';
         soundUrl.value = '';
-        soundUrl.value = '';
-    }
+        soundImg.value = '';
+    };
 
-    return { soundUrl, soundName, soundImg, resetSound }
-})
+    const addToHistory = (song) => {
+        history.value.unshift(song); // Agregar la canción al principio del historial
+        if (history.value.length > 5) {
+            history.value.pop(); // Mantener solo las últimas 5 canciones
+        }
+    };
+
+    return { soundUrl, soundName, soundImg, resetSound, history, addToHistory };
+});
