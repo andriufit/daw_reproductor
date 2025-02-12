@@ -57,6 +57,37 @@ body{
                     padding-top: 5px;
                 }
             }
+            .lista-reproduccion{
+                color: white;
+                padding: 10px 10px;
+                border-radius: 10px;
+                margin-top: 15px;
+                h1{
+                    text-align: center;
+                }
+                .song-list{
+                    list-style: none;                    
+                .song-element{
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    width: 100%;
+                    padding: 10px 10px;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    }
+                    .song-element:hover {
+                        background: #2e2e3f;
+                    }
+                    .song-info{
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        font-size: 15px;
+                    }
+                }
+                
+            }
         }
 
         .data-container{
