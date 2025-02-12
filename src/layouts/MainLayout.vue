@@ -1,5 +1,3 @@
-
-
 <template>
     <div class="player-container">
 
@@ -9,8 +7,18 @@
                     <input v-model="searchDataStore.searchText" placeholder="Buscar" type="text" name="searchQuery" class="search-box">
                     <i class="bi bi-search"></i>
                 </div>
+                <div class="lista-reproduccion">
+                    <h1>Ultimas Reproducciones</h1>
+                    <ul class="song-list">
+                        <li v-for="(song, index) in ultimaSound" :key="index" class="song-element" @click="playSongFromList(song)">
+                            <img :src="song.img" alt="cover" width="70" height="70" />
+                            <div class="song-info">
+                                <strong>{{ song.name }}</strong>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <nav>
-
                 </nav>
             </div>
             <div class="data-container">
@@ -29,7 +37,6 @@
             </div>
 
             <div class="control-box">
-               
                 <div class="buttons-container">
                     <i class="bi bi-skip-backward"></i>
                     <i :class="currentButtonIcon" @click="toggleReproduction"></i>
@@ -63,31 +70,34 @@
     let endTime = ref("0:00");
     let songCurrentTime = ref(0);
     let songFullTime = ref(0);
+    let ultimaSound= ref([]);
 
+    watch(() => soundDataStore.soundUrl, (newUrl) => {
+        if (newUrl) {
+            reproductor.value.load();
+            reproductor.value.play();
+            currentButtonIcon.value = "bi bi-pause-circle";
 
-    watch(soundDataStore, () => {
-        reproductor.value.load();
-        reproductor.value.play();
-        currentButtonIcon.value = "bi bi-pause-circle";
+            addLastSongs({
+                name: soundDataStore.soundName || "Sin título",
+                img: soundDataStore.soundImg || "https://via.placeholder.com/50",
+                url: newUrl
+            });
+        }
     });
 
-
-    onMounted(async () => {
+    onMounted(() => {
         reproductor.value.addEventListener('loadedmetadata', () => {
             let duration = Math.floor(reproductor.value.duration);
-
             songFullTime.value = duration;
-
             endTime.value = "0:" + duration;
         });
 
         reproductor.value.addEventListener("timeupdate", () => {
             let duration = Math.floor(reproductor.value.currentTime);
-
             currentTime.value = "0:" + duration;
             songCurrentTime.value = duration;
         });
-
     });
 
 
@@ -108,6 +118,22 @@
             reproductor.value.pause();
         }
     };
-</script>
+    
+    const addLastSongs = (song) => {
+        if (ultimaSound.value.length > 0 && ultimaSound.value[0].name === song.name) {
+            return; // Evitar duplicados consecutivos
+        }
 
-<style></style>
+        ultimaSound.value.unshift(song); // Añadir la canción al inicio
+        if (ultimaSound.value.length > 5) {
+            ultimaSound.value.pop(); // Mantener solo las últimas 5 canciones
+        };
+    };
+
+    const playSongFromList = (song) =>{
+        soundDataStore.soundName=song.name;
+        soundDataStore.soundImg=song.img;
+        soundDataStore.soundUrl=song.url;
+    };
+
+</script>
