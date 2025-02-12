@@ -1,17 +1,19 @@
-
-
 <template>
     <div class="player-container">
-
         <div class="content-container">
             <div class="lateral-container">
                 <div class="search-box-container">
                     <input v-model="searchDataStore.searchText" placeholder="Buscar" type="text" name="searchQuery" class="search-box">
                     <i class="bi bi-search"></i>
                 </div>
-                <nav>
-
-                </nav>
+                <div class="ultimasEscuchadas">
+                    <h3>Últimas canciones escuchadas</h3>
+                    <ul>
+                        <li v-for="(song, index) in recentSongs" :key="index" @click="playRecentSong(song)">
+                            <i class="bi bi-play-circle"></i> {{ song.name }}
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="data-container">
                 <RouterView />
@@ -22,14 +24,13 @@
             <audio ref="reproductor" id="Reproductor" controls>
                 <source :src="soundDataStore.soundUrl" type="audio/mpeg">
                 Your browser does not support the audio element.
-            </audio> 
+            </audio>
 
             <div class="sound-data-container">
                 <label>{{ soundDataStore.soundName }}</label>
             </div>
 
             <div class="control-box">
-               
                 <div class="buttons-container">
                     <i class="bi bi-skip-backward"></i>
                     <i :class="currentButtonIcon" @click="toggleReproduction"></i>
@@ -45,69 +46,75 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script setup>
-    import { useTemplateRef, ref, onMounted, watch } from 'vue';
-    import { useSoundDataStore } from '../stores/soundData';
-    import { useSearchStore } from '@/stores/search';
+import { ref, onMounted, watch } from 'vue';
+import { useSoundDataStore } from '../stores/soundData';
+import { useSearchStore } from '@/stores/search';
 
-    const searchDataStore = useSearchStore();
-    const soundDataStore = useSoundDataStore();
+const searchDataStore = useSearchStore();
+const soundDataStore = useSoundDataStore();
 
-    let currentButtonIcon = ref("bi bi-play-circle");
-    const reproductor = useTemplateRef("reproductor");
+let currentButtonIcon = ref("bi bi-play-circle");
+const reproductor = ref(null);
 
-    let currentTime = ref("0:00");
-    let endTime = ref("0:00");
-    let songCurrentTime = ref(0);
-    let songFullTime = ref(0);
+let currentTime = ref("0:00");
+let endTime = ref("0:00");
+let songCurrentTime = ref(0);
+let songFullTime = ref(0);
+let recentSongs = ref([]);
 
-
-    watch(soundDataStore, () => {
+watch(() => soundDataStore.soundUrl, (newVal) => {
+    if (newVal) {
         reproductor.value.load();
         reproductor.value.play();
         currentButtonIcon.value = "bi bi-pause-circle";
-    });
 
-
-    onMounted(async () => {
-        reproductor.value.addEventListener('loadedmetadata', () => {
-            let duration = Math.floor(reproductor.value.duration);
-
-            songFullTime.value = duration;
-
-            endTime.value = "0:" + duration;
-        });
-
-        reproductor.value.addEventListener("timeupdate", () => {
-            let duration = Math.floor(reproductor.value.currentTime);
-
-            currentTime.value = "0:" + duration;
-            songCurrentTime.value = duration;
-        });
-
-    });
-
-
-    const changeAudioTime = (e) => {
-        if(e.target.value == Math.floor(reproductor.value.currentTime)) return;
-        
-        reproductor.value.currentTime = e.target.value;
-        currentTime.value = "0:" + Math.floor(reproductor.value.currentTime);
-    }
-
-    
-    const toggleReproduction = () => {
-        if(reproductor.value.paused){
-            currentButtonIcon.value = "bi bi-pause-circle";
-            reproductor.value.play();
-        } else {
-            currentButtonIcon.value = "bi bi-play-circle";
-            reproductor.value.pause();
+        if (!recentSongs.value.some(song => song.name === soundDataStore.soundName)) {
+            recentSongs.value.unshift({
+                name: soundDataStore.soundName,
+                url: soundDataStore.soundUrl
+            });
+            if (recentSongs.value.length > 5) {
+                recentSongs.value.pop();
+            }
         }
-    };
-</script>
+    }
+});
 
-<style></style>
+onMounted(() => {
+    reproductor.value.addEventListener('loadedmetadata', () => {
+        let duration = Math.floor(reproductor.value.duration);
+        songFullTime.value = duration;
+        endTime.value = "0:" + duration;
+    });
+
+    reproductor.value.addEventListener("timeupdate", () => {
+        let duration = Math.floor(reproductor.value.currentTime);
+        currentTime.value = "0:" + duration;
+        songCurrentTime.value = duration;
+    });
+});
+
+const changeAudioTime = (e) => {
+    if (e.target.value == Math.floor(reproductor.value.currentTime)) return;
+    reproductor.value.currentTime = e.target.value;
+    currentTime.value = "0:" + Math.floor(reproductor.value.currentTime);
+}
+
+const toggleReproduction = () => {
+    if (reproductor.value.paused) {
+        currentButtonIcon.value = "bi bi-pause-circle";
+        reproductor.value.play();
+    } else {
+        currentButtonIcon.value = "bi bi-play-circle";
+        reproductor.value.pause();
+    }
+};
+
+const playRecentSong = (song) => {
+    soundDataStore.soundName = song.name;
+    soundDataStore.soundUrl = song.url;
+};
+</script>

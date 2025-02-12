@@ -1,0 +1,47 @@
+.ultimasEscuchadas {
+    background-color: #121212;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 300px;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    margin-left: 1%;
+    margin-top: 2%;
+}
+
+.ultimasEscuchadas h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1DB954;
+}
+
+.ultimasEscuchadas ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ultimasEscuchadas li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #282828;
+    margin-bottom: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.ultimasEscuchadas li i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.ultimasEscuchadas li:hover {
+    background-color: #1DB954;
+    color: #000;
+}
