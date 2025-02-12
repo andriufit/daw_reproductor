@@ -24,7 +24,6 @@
         <div class="loading-gif-container" v-show="!searchDataStore.loadSearch">
             <loadingComponent></loadingComponent>
         </div>
-        Asensio
     </div>
 </template>
 
@@ -88,8 +87,6 @@ const getSoundsDataNext = async () => {
                 Object.assign(element, data);
             })
         );
-        
-
         
         soundsData.value = [...soundsData.value, ...newSounds];
     }
