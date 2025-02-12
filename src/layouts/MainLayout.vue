@@ -9,6 +9,16 @@
                     <input v-model="searchDataStore.searchText" placeholder="Buscar" type="text" name="searchQuery" class="search-box">
                     <i class="bi bi-search"></i>
                 </div>
+
+                <div class="history-container">
+                    <h4>Historial</h4>
+                    <div v-for="(song, index) in soundDataStore.history" :key="index" class="history-item" @click="playFromHistory(song)">
+                        <img :src="song.soundImg" alt="cover" class="history-img">
+                        <div class="history-info">
+                            <label>{{ song.soundName }}</label>
+                        </div>
+                    </div>
+                </div>
                 <nav>
 
                 </nav>
@@ -29,7 +39,6 @@
             </div>
 
             <div class="control-box">
-               
                 <div class="buttons-container">
                     <i class="bi bi-skip-backward"></i>
                     <i :class="currentButtonIcon" @click="toggleReproduction"></i>
@@ -110,4 +119,31 @@
     };
 </script>
 
-<style></style>
+<style scoped>
+.lateral-container {
+    padding: 1rem;
+}
+
+.history-container {
+    margin-top: 1rem;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    cursor: pointer;
+}
+
+.history-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 0.5rem;
+}
+
+.history-info label {
+    font-size: 0.9rem;
+}
+</style>
